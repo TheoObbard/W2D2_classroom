@@ -18,9 +18,9 @@ class Display
       print "\n"
       row.each_with_index do |cell, ci|
         if [ri,ci] == @cursor.cursor_pos
-          print " yay ".red
+          print row[ci].symbol.red
         else
-          print " nay "
+          print row[ci].symbol
         end
       end
     end

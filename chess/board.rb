@@ -6,6 +6,8 @@ class Board
   
   def initialize
     @grid = Array.new(8) { Array.new(8) }
+    @sentinel = NullPiece.instance
+    populate
   end
   
   def [](pos)
@@ -35,6 +37,25 @@ class Board
     self[end_pos], self[start_pos] = self[start_pos], self[end_pos]
   end
   
+  def populate #creates instances of pieces and puts them where they need to go (inclding NullPiece)
+    @grid.each_with_index do |row, ri|
+      row.each_with_index do |cell, ci|
+        if ri == 0 || ri == 1
+          team = "green"
+        elsif ri == 6 || ri == 7
+          team = "red"
+        end
+        
+        if ri == 0 || ri == 7 || ri == 1 || ri == 6
+          row[ci] = Rook.new([ri, ci], self, team)
+        else
+          row[ci] = @sentinel
+        end
+      end
+      
+    end
+  end 
+  
   def testing
     thing = Display.new(self)
     10.times do
@@ -47,6 +68,6 @@ class Board
     next_pos[0].between?(0, 7) && next_pos[1].between?(0, 7)
   end 
 end
-
+# 
 game = Board.new
 game.testing

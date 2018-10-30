@@ -1,20 +1,35 @@
+require "singleton"
+require "byebug"
+
 module Sliding
   
-  DIAGONAL = [
-    [@start_pos[0] + 1, @start_pos[1] + 1],
-    [@start_pos[0] - 1, @start_pos[1] - 1],
-    [@start_pos[0] - 1, @start_pos[1] + 1],
-    [@start_pos[0] + 1, @start_pos[1] - 1]
-  ]
+  # DIAGONAL = [
+  #   [start_pos[0] + 1, start_pos[1] + 1],
+  #   [start_pos[0] - 1, start_pos[1] - 1],
+  #   [start_pos[0] - 1, start_pos[1] + 1],
+  #   [start_pos[0] + 1, start_pos[1] - 1]
+  # ]
+  # 
+  # HORIZONTAL = [
+  #   [start_pos[0] + 1, start_pos[1]],
+  #   [start_pos[0] - 1, start_pos[1]],
+  #   [start_pos[0], start_pos[1] + 1],
+  #   [start_pos[0], start_pos[1] - 1]
+  # ]
   
   HORIZONTAL = [
-    [@start_pos[0] + 1, @start_pos[1]],
-    [@start_pos[0] - 1, @start_pos[1]],
-    [@start_pos[0], @start_pos[1] + 1],
-    [@start_pos[0], @start_pos[1] - 1]
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1]
   ]
   
+  def horizontal 
+    HORIZONTAL
+  end 
+  
   def moves
+    # debugger
     # [[ 0, 1], [0, 2]]
     # array of all possible positions in regards to which direction the piece can move
     # for each direction, generate a path with #grow_unblocked_moves_in_dir and concat to main array of possible positions
@@ -23,7 +38,7 @@ module Sliding
     
     dir.each do |direction|
       direction.each do |pos|
-        possible_moves << pos
+        possible_moves << [@start_pos[0] + pos[0], @start_pos[1] + pos[1]]
       end
     end
     
@@ -31,6 +46,7 @@ module Sliding
       dx, dy = pos
       possible_moves += grow_unblocked_moves_in_dir(dx, dy) #grow_unblocked_moves_in_dir returns array of positions that are arrays per direction
     end
+    possible_moves
   end
   
   def horizontal_dirs(dx, dy, direction)
@@ -38,13 +54,13 @@ module Sliding
     pos = [dx, dy]
     if direction == :right 
       pos[0] += 1      
-      while @board.grid[pos].is_a?(NullPiece) && pos[0].between?(0, 8)
+      while @board[pos].is_a?(NullPiece) && pos[0].between?(0, 8)
         positions << pos 
         pos[0] += 1      
       end 
     else #left  
       pos[0] -= 1      
-      while @board.grid[pos].is_a?(NullPiece) && pos[0].between?(0, 8)
+      while @board[pos].is_a?(NullPiece) && pos[0].between?(0, 8)
         positions << pos 
         pos[0] -= 1      
       end 
@@ -57,13 +73,13 @@ module Sliding
     pos = [dx, dy]
     if direction == :up 
       pos[1] += 1      
-      while @board.grid[pos].is_a?(NullPiece) && pos[1].between?(0, 8)
+      while @board[pos].is_a?(NullPiece) && pos[1].between?(0, 8)
         positions << pos 
         pos[1] += 1      
       end 
     else #down  
       pos[1] -= 1      
-      while @board.grid[pos].is_a?(NullPiece) && pos[1].between?(0, 8)
+      while @board[pos].is_a?(NullPiece) && pos[1].between?(0, 8)
         positions << pos 
         pos[1] -= 1      
       end 
@@ -84,11 +100,7 @@ module Sliding
       result += vertical_dirs(dx, dy, :up)
     when :down 
       result += vertical_dirs(dx, dy, :down)
-    # figure out direction to add to
-    # increment direction by 1
-    # check against board
-    # result << increment if allowed
-    # return result
+    end
   end
   
   private
@@ -150,24 +162,34 @@ end
 class NullPiece < Piece
   include Singleton
   
-  def initialize(symbol = :0)
-    @symbol = symbol
-    
+  def initialize(color = "nil")
+    @color = color
+  end
+  
+  def symbol
+    "   "
   end 
   
 end
 
 class Rook < Piece 
   include Sliding
+  attr_reader :color, :start_pos
 
-  def initialize(type = :R, start_pos, board)
-    @type = type
+  def initialize(start_pos, board, color)
+    @color = color
     @start_pos = start_pos
     @board = board
   end
      
   def move_dir
     [HORIZONTAL]
-  end  
+  end 
+  
+  def symbol
+    " ♜ "
+  end
   
 end 
+
+
