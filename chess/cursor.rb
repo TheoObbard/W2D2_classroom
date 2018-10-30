@@ -80,7 +80,7 @@ class Cursor
     # byebug
     case key
     when :space || :return
-      @cursor_pos
+      return @cursor_pos
     when :up
       update_pos(MOVES[:up])
       return nil

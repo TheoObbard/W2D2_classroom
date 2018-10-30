@@ -52,16 +52,13 @@ class Board
           row[ci] = @sentinel
         end
       end
-      
     end
   end 
   
   def testing
     thing = Display.new(self)
-    10.times do
-      thing.render
+    thing.render
       # Cursor.get_input
-    end
   end
   
   def valid_pos?(next_pos)
