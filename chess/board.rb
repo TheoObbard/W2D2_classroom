@@ -1,5 +1,6 @@
 require_relative 'piece'
 require_relative 'display'
+require 'byebug'
 
 class Board
   attr_accessor :grid
@@ -26,6 +27,9 @@ class Board
   
   def move_piece(start_pos, end_pos)
     # raise "Can't move a null piece" if self[start_pos].is_a?(NullPiece)
+    p start_pos
+    p "----"
+    p end_pos
     unless start_pos[0].between?(0, 7) && start_pos[1].between?(0, 7)
       raise "Can't select pieces off the board"
     end
@@ -65,6 +69,6 @@ class Board
     next_pos[0].between?(0, 7) && next_pos[1].between?(0, 7)
   end 
 end
-# 
+
 game = Board.new
 game.testing

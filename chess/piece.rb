@@ -38,7 +38,6 @@ module Sliding
       while @board[curr_pos].is_a?(NullPiece)
         possibles_moves << [curr_pos[0] + direction[0], curr_pos[1] + direction[1]]
       end 
-      possibles_moves 
     end
 
     possible_moves

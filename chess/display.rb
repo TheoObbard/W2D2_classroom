@@ -1,4 +1,5 @@
 require_relative "cursor"
+require_relative "piece"
 require 'colorize'
 require 'byebug'
 class Display 
@@ -17,7 +18,7 @@ class Display
   def render
     loop do 
       # debugger
-      system("clear")
+      # system("clear")
       @board.grid.each_with_index do |row, ri| 
         print "\n"
         row.each_with_index do |cell, ci|
@@ -33,10 +34,13 @@ class Display
         if @start_pos.nil?
           @start_pos = try
         else
-          @end_pos = try
-          @board.move_piece(@start_pos, @end_pos)
-          @start_pos = nil
-          @end_pos = nil
+          p @board[@start_pos]
+          if @board[@start_pos].moves.include?(try)
+            @end_pos = try 
+            @board.move_piece(@start_pos, @end_pos)
+            @start_pos = nil
+            @end_pos = nil
+          end
         end 
       end
     end
